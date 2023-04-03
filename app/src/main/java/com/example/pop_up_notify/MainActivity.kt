@@ -11,10 +11,14 @@ import android.graphics.BitmapFactory
 import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
+import android.text.Layout
 import android.widget.Button
 import android.widget.RemoteViews
 
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import org.w3c.dom.Text
+import java.lang.reflect.Modifier
 
 
 class MainActivity : AppCompatActivity() {
@@ -26,9 +30,16 @@ class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        installSplashScreen().apply {
+            Thread.sleep(1000)
+        }
+
         setContentView(R.layout.activity_main)
 
-        notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+
+
+        notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
         var mybutt: Button = findViewById(R.id.mybutton)
         mybutt.setOnClickListener {
