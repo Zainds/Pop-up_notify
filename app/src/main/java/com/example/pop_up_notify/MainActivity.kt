@@ -9,11 +9,13 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.BitmapFactory
 import android.graphics.Color
+import android.media.AudioManager
 import android.os.Build
 import android.os.Bundle
 import android.text.Layout
 import android.widget.Button
 import android.widget.RemoteViews
+import android.widget.Toast
 
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -38,6 +40,8 @@ class MainActivity : AppCompatActivity() {
 
 
 
+        val audioManager: AudioManager =
+            getSystemService(AUDIO_SERVICE) as AudioManager
 
         notificationManager = getSystemService(NOTIFICATION_SERVICE) as NotificationManager
 
@@ -86,9 +90,34 @@ class MainActivity : AppCompatActivity() {
                     .setContentIntent(pendingIntent)
             }
             notificationManager.notify(1234, builder.build())
+            if(audioManager.mediaCurrentVolume >=4){
+                audioManager.setMediaVolume(3)
+            }
 
         }
 
+    }
+    // Extension function to change media volume programmatically
+    fun AudioManager.setMediaVolume(volumeIndex:Int) {
+        // Set media volume level
+        this.setStreamVolume(
+            AudioManager.STREAM_MUSIC, // Stream type
+            volumeIndex, // Volume index
+            AudioManager.FLAG_SHOW_UI// Flags
+        )
+    }
+
+    // Extension property to get media maximum volume index
+    val AudioManager.mediaMaxVolume:Int
+        get() = this.getStreamMaxVolume(AudioManager.STREAM_MUSIC)
+
+    // Extension property to get media/music current volume index
+    val AudioManager.mediaCurrentVolume:Int
+        get() = this.getStreamVolume(AudioManager.STREAM_MUSIC)
+
+    // Extension function to show toast message
+    fun Context.toast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
     }
 
 
