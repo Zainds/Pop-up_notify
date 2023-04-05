@@ -21,6 +21,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import org.w3c.dom.Text
 import java.lang.reflect.Modifier
+import java.text.SimpleDateFormat
+import java.util.*
 
 
 class MainActivity : AppCompatActivity() {
@@ -89,10 +91,21 @@ class MainActivity : AppCompatActivity() {
                     .setLargeIcon(BitmapFactory.decodeResource(this.resources, R.drawable.ic_launcher_background))
                     .setContentIntent(pendingIntent)
             }
-            notificationManager.notify(1234, builder.build())
-            if(audioManager.mediaCurrentVolume >=4){
-                audioManager.setMediaVolume(3)
+            val hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY)
+            if (!(hour in 1..6)){
+                if(User.pushNotify) notificationManager.notify(1234, builder.build())
+                if(audioManager.mediaCurrentVolume >=4 && User.volumeDecrease){
+
+
+
+                    toast(hour.toString())
+                    val previousVolume: Int = audioManager.mediaCurrentVolume
+                    audioManager.setMediaVolume(3)
+                    Thread.sleep(3000)
+                    audioManager.setMediaVolume(previousVolume)
+                }
             }
+
 
         }
 
@@ -117,7 +130,7 @@ class MainActivity : AppCompatActivity() {
 
     // Extension function to show toast message
     fun Context.toast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_SHORT).show()
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
 
 
